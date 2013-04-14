@@ -1721,6 +1721,10 @@ static int msm_hsic_pm_resume(struct device *dev)
 	if (device_may_wakeup(dev))
 		disable_irq_wake(hcd->irq);
 
+        if (!atomic_read(&mehci->pm_usage_cnt) &&
+	                pm_runtime_suspended(dev))
+               return 0;
+
 	ret = msm_hsic_resume(mehci);
 	if (ret)
 		return ret;
